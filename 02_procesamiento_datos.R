@@ -52,7 +52,12 @@ capacidad <- base %>%
                               Factores == "capacidad_factores_desastres" ~ "Desastres naturales"))
 
 
-
+factores <- merge(factores, influencia, by = "Factores", all.x = T) %>%
+  merge(capacidad, by = "Factores", all.x = T) %>%
+  rename("Influencia del factor externo" = Influencia, 
+         "Capacidad de adaptación de UNICEF al factor externo")
+  
+  
 # Enfoques transversales --------------------------------------------------
 transversales <- base %>%
   select(institucion2,
@@ -62,8 +67,7 @@ transversales <- base %>%
   summarise(across(contains("apoyo"), ~ mean(., na.rm= T))) %>%
   #tabla longer
   pivot_longer(apoyo_genero:apoyo_interculturalidad_ddhh,
-               names_to = "Ejes", values_to = "Apoyo para introduccion de ejes
-               transversales") %>%
+               names_to = "Ejes", values_to = "Apoyo para introduccion de ejes transversales") %>%
   #arreglar etiquetas
   mutate(Ejes = case_when(Ejes == "apoyo_genero" ~ "Enfoque de género",
                               Ejes == "apoyo_equidad" ~ "Enfoque de equidad",
